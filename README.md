@@ -1,50 +1,80 @@
-# React + TypeScript + Vite
+# Ollama chat
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Table of Contents**
 
-Currently, two official plugins are available:
+- [Ollama chat](#ollama-chat)
+- [Why](#why)
+- [What it does?](#what-it-does)
+- [How do I use it?](#how-do-i-use-it)
+- [Install Ollama](#install-ollama)
+- [Start Ollama](#start-ollama)
+- [Pull desired AI model](#pull-desired-ai-model)
+- [Install ollama-chat](#install-ollama-chat)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Why
 
-## Expanding the ESLint configuration
+That's just a basic proof-of-concept project creating a ChatGPT-like chat bot
+using [ollama.ai](https://ollama.ai/) as backend. I've decided to use React
+and TypeScript because I've known none of that going into this and was interested
+to see firstly how it works and secondly... how much of the code can be generated
+by ChatGPT itself. Well, the server that talks to Ollama is practically 90%
+AI-generated, as the only thing I've changed there, was adding correct call
+with correct params. The rest was basically rewritten by me, so that was a nice
+learning experience. Oh, there's also Tailwind which I know a bit.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## What it does?
 
-- Configure the top-level `parserOptions` property like this:
+It starts a chat app on `localhost:8080` where you can talk to Mistral AI model
+just like you would with ChatGPT. It remembers the history of current coversation,
+it doesn't preserve in session though. It doesn't have cool answer streaming
+(so you get the full answer when it is ready, not word by word), and also it doesn't
+have syntax highlighting.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## How do I use it?
+
+### Install Ollama
+
+Visit [ollama.ai](https://ollama.ai/) and get it. It's also in AUR, it works in WSL2.
+
+### Start Ollama
+
+Run following command:
+
+```sh
+ollama serve
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+...and let it run. You might also start ollama as a service, which is explained on
+their GitHub.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Pull desired AI model
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```sh
+ollama pull mistral
 ```
+
+Chatbot uses `mistral` by default, but it is easy to change. Important thing is that you need
+to have this model in order to use it (obviously).
+
+### Install ollama-chat
+
+Clone this repository:
+
+```sh
+git clone https://github.com/wmwnuk/ollama-chat.git
+```
+
+Go to the project directory and install dependencies:
+
+```sh
+cd ollama-chat
+npm install
+```
+
+Start the application itself:
+
+```sh
+npm run start-dev
+```
+
+...and then go to [localhost:8080](http://localhost:8080) and have a nice conversation. :)
