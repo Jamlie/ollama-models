@@ -1,0 +1,598 @@
+[
+    {
+        "input": "what is Templ",
+        "output": "Create components that render fragments of HTML and compose them to create screens, pages, documents, or apps.\n\nServer-side rendering: Deploy as a serverless function, Docker container, or standard Go program.\nStatic rendering: Create static HTML files to deploy however you choose.\nCompiled code: Components are compiled into performant Go code.\nUse Go: Call any Go code, and use standard if, switch, and for statements.\nNo JavaScript: Does not require any client or server-side JavaScript.\nGreat developer experience: Ships with IDE autocompletion."
+    },
+    {
+        "input": "example of Templ",
+        "output": "package main\n\ntempl Hello(name string) {\n  <div>Hello, { name }</div>\n}\n\ntempl Greeting(person Person) {\n  <div class=\"greeting\">\n    @Hello(person.Name)\n  </div>\n}"
+    },
+    {
+        "input": "What is the basic syntax of a templ file?",
+        "output": "templ files start with a package name, followed by any required imports, just like Go. For example:\n\n```go\npackage main\n\nimport \"fmt\"\nimport \"time\"\n```"
+    },
+    {
+        "input": "What are components in templ?",
+        "output": "Components in templ are markup and code that are compiled into functions returning a `templ.Component` interface. They can contain templ elements that render HTML, text, expressions, and branching statements like `if`, `switch`, and `for` loops. For example:\n\n```templ name=\"header.templ\"\npackage main\n\ntempl headerTemplate(name string) {\n  <header data-testid=\"headerTemplate\">\n    <h1>{ name }</h1>\n  </header>\n}\n```"
+    },
+    {
+        "input": "Can templ files contain Go code?",
+        "output": "Yes, outside of templ Components, templ files are ordinary Go code. For example:\n\n```templ name=\"header.templ\"\npackage main\n\n// Ordinary Go code that we can use in our Component.\nvar greeting = \"Welcome!\"\n\n// templ Component\ntempl headerTemplate(name string) {\n  <header>\n    <h1>{ name }</h1>\n    <h2>\"{ greeting }\" comes from ordinary Go code</h2>\n  </header>\n}\n```"
+    },
+    {
+        "input": "How do you define a templ component?",
+        "output": "A templ component is defined using the `templ` keyword, followed by the component name and parameters. Inside the component, you can write HTML-like syntax and embed expressions. For example:\n\n```templ\npackage main\n\ntempl headerTemplate(name string) {\n  <header data-testid=\"headerTemplate\">\n    <h1>{ name }</h1>\n  </header>\n}\n```"
+    },
+    {
+        "input": "What is an example of using Go code within a templ component?",
+        "output": "You can use ordinary Go code outside of templ components and reference it within the component. For example:\n\n```templ name=\"header.templ\"\npackage main\n\nvar greeting = \"Welcome!\"\n\ntempl headerTemplate(name string) {\n  <header>\n    <h1>{ name }</h1>\n    <h2>\"{ greeting }\" comes from ordinary Go code</h2>\n  </header>\n}\n```"
+    },
+    {
+        "input": "What are templ elements used for?",
+        "output": "templ elements are used to render HTML within templ components. For example:\n\n```templ title=\"button.templ\"\npackage main\n\ntempl button(text string) {\n\t<button class=\"button\">{ text }</button>\n}\n```"
+    },
+    {
+        "input": "How do you render a templ component in Go?",
+        "output": "You can render a templ component in Go by calling the component function and using the `Render` method. For example:\n\n```go title=\"main.go\"\npackage main\n\nimport (\n\t\"context\"\n\t\"os\"\n)\n\nfunc main() {\n\tbutton(\"Click me\").Render(context.Background(), os.Stdout)\n}\n```\n\nOutput:\n\n```html title=\"Output\"\n<button class=\"button\">\n Click me\n</button>\n```"
+    },
+    {
+        "input": "Does templ automatically minify HTML responses?",
+        "output": "Yes, templ automatically minifies HTML responses. The output is shown formatted for readability in examples."
+    },
+    {
+        "input": "How are HTML tags handled in templ?",
+        "output": "In templ, all HTML elements must be closed with either a closing tag (e.g., `</a>`) or by using a self-closing element (e.g., `<hr/>`). templ is aware of which HTML elements are \"void\" and will not include the closing `/` in the output HTML. For example:\n\n```templ title=\"button.templ\"\npackage main\n\ntempl component() {\n\t<div>Test</div>\n\t<img src=\"images/test.png\"/>\n\t<br/>\n}\n```\n\nOutput:\n\n```templ title=\"Output\"\n<div>Test</div>\n<img src=\"images/test.png\">\n<br>\n```"
+    },
+    {
+        "input": "Can templ elements contain expressions?",
+        "output": "Yes, templ elements can contain placeholder expressions for attributes and content. For example:\n\n```templ title=\"button.templ\"\npackage main\n\ntempl button(name string, content string) {\n\t<button value={ name }>{ content }</button>\n}\n```\n\nWhen rendered, the output is:\n\n```html title=\"Output\"\n<button value=\"John\">Say Hello</button>\n```"
+    },
+    {
+        "input": "How do you render a templ component with expressions?",
+        "output": "You can render a templ component with expressions by passing arguments to the component function and calling the `Render` method. For example:\n\n```go title=\"main.go\"\nfunc main() {\n\tcomponent := button(\"John\", \"Say Hello\")\n\tcomponent.Render(context.Background(), os.Stdout)\n}\n```\n\nOutput:\n\n```html title=\"Output\"\n<button value=\"John\">Say Hello</button>\n```"
+    },
+    {
+        "input": "how do you define constant attributes in templ?",
+        "output": "Constant attributes in templ are defined using double quotes (`\"`) just like in HTML. For example:\n```templ\ntempl component() {\n  <p data-testid=\"paragraph\">Text</p>\n}\n```\nThe output will be:\n```html\n<p data-testid=\"paragraph\">Text</p>\n```"
+    },
+    {
+        "input": "how do you use string expressions in attributes?",
+        "output": "You can set element attributes to Go strings using expressions. For example:\n```templ\ntempl component(testID string) {\n  <p data-testid={ testID }>Text</p>\n}\ntempl page() {\n  @component(\"testid-123\")\n}\n```\nThe output will be:\n```html\n<p data-testid=\"testid-123\">Text</p>\n```"
+    },
+    {
+        "input": "how does templ handle boolean attributes?",
+        "output": "Boolean attributes in templ are supported, and their presence indicates `true`, while their absence indicates `false`. You can also use a question mark (`?`) after the attribute name to denote that it is boolean. Example:\n```templ\ntempl component() {\n  <hr noshade?={ false } />\n}\n```\nThe output will be:\n```html\n<hr>\n```"
+    },
+    {
+        "input": "how do you conditionally add attributes in templ?",
+        "output": "You can use an `if` statement within a templ element to optionally add attributes. For example:\n```templ\ntempl component() {\n  <hr style=\"padding: 10px\"\n    if true {\n      class=\"itIsTrue\"\n    }\n  />\n}\n```\nThe output will be:\n```html\n<hr style=\"padding: 10px\" class=\"itIsTrue\" />\n```"
+    },
+    {
+        "input": "what are spread attributes in templ?",
+        "output": "Spread attributes allow you to append a dynamic map of attributes to an element's attributes using the `{ attrMap... }` syntax. The map must be of type `templ.Attributes`, which is a `map[string]any`. Example:\n```templ\ntempl component(shouldBeUsed bool, attrs templ.Attributes) {\n  <p { attrs... }>Text</p>\n  <hr\n    if shouldBeUsed {\n      { attrs... }\n    }\n  />\n}\ntempl usage() {\n  @component(false, templ.Attributes{\"data-testid\": \"paragraph\"}) \n}\n```\nThe output will be:\n```html\n<p data-testid=\"paragraph\">Text</p>\n<hr>\n```"
+    },
+    {
+        "input": "how does templ handle URL attributes?",
+        "output": "For URL attributes like `<a href>`, templ expects a `templ.SafeURL` instead of a plain string. You can use the `templ.URL` function to sanitize and validate the URL. Example:\n```templ\ntempl component(p Person) {\n  <a href={ templ.URL(p.URL) }>{ strings.ToUpper(p.Name) }</a>\n}\n```\nThis ensures that the URL is safe and prevents XSS attacks by escaping special characters."
+    },
+    {
+        "input": "how do you handle JavaScript attributes in templ?",
+        "output": "JavaScript attributes like `onClick` expect a reference to a `script` template. This ensures that client-side JavaScript is emitted only once and avoids script name collisions. Example:\n```templ\nscript withParameters(a string, b string, c int) {\n\tconsole.log(a, b, c);\n}\nscript withoutParameters() {\n\talert(\"hello\");\n}\ntempl Button(text string) {\n\t<button onClick={ withParameters(\"test\", text, 123) } onMouseover={ withoutParameters() } type=\"button\">{ text }</button>\n}\n```\nThe output will include the necessary `<script>` tags and event handlers."
+    },
+    {
+        "input": "how do you handle JSON attributes in templ?",
+        "output": "To set an attribute's value to a JSON string (e.g., for HTMX or Alpine.js), you can serialize the value to a string using a Go function. Example:\n```go\nfunc countriesJSON() string {\n\tcountries := []string{\"Czech Republic\", \"Slovakia\", \"United Kingdom\", \"Germany\", \"Austria\", \"Slovenia\"}\n\tbytes, _ := json.Marshal(countries)\n\treturn string(bytes)\n}\n```\nThen use it in your templ component:\n```templ\ntempl SearchBox() {\n\t<search-webcomponent suggestions={ countriesJSON() } />\n}\n```"
+    },
+    {
+        "input": "how do you use string expressions in templ?",
+        "output": "In templ, string expressions can be used to render strings within elements. These expressions are automatically escaped using context-aware HTML encoding rules to protect against XSS and CSS injection attacks. You can use string literals, variables, and functions that return a string.\n\nFor example:\n```templ\ntempl component() {\n  <div>{ \"print this\" }</div>\n  <div>{ `and this` }</div>\n}\n```\nThe output will be:\n```html\n<div>print this</div><div>and this</div>\n```"
+    },
+    {
+        "input": "can you use Go string literals in templ?",
+        "output": "Yes, you can use Go string literals in templ. For example:\n```templ\ntempl component() {\n  <div>{ \"print this\" }</div>\n  <div>{ `and this` }</div>\n}\n```\nThe output will be:\n```html\n<div>print this</div><div>and this</div>\n```"
+    },
+    {
+        "input": "how do you use variables in templ string expressions?",
+        "output": "You can use any Go string variable in templ, such as function parameters, struct fields, or constants. For example:\n```templ\ntempl greet(prefix string, p Person) {\n  <div>{ prefix } { p.Name }{ exclamation }</div>\n}\n```\nWhen rendered with appropriate inputs, the output will be:\n```html\n<div>Hello John!</div>\n```"
+    },
+    {
+        "input": "can you use functions in templ string expressions?",
+        "output": "Yes, you can use functions that return a `string` or `(string, error)` in templ string expressions. If the function returns an error, the `Render` function will return an error containing the location of the issue. Example:\n```templ\ntempl component() {\n  <div>{ strings.ToUpper(\"abc\") }</div>\n  <div>{ getString() }</div>\n}\n```\nThe output will be:\n```html\n<div>ABC</div>\n<div>DEF</div>\n```"
+    },
+    {
+        "input": "how does templ handle escaping in string expressions?",
+        "output": "Templ automatically escapes strings using HTML escaping rules to prevent XSS and CSS injection attacks. For example:\n```templ\ntempl component() {\n  <div>{ `</div><script>alert('hello!')</script><div>` }</div>\n}\n```\nThe output will be:\n```html\n<div></div><script>alert(&#39;hello!&#39;)</script><div></div>\n```"
+    },
+    {
+        "input": "how do you use control flow statements in templ?",
+        "output": "In templ, you can use Go control flow statements like `if`, `switch`, and `for` directly within elements to conditionally render child elements or iterate over variables. For example:\n```templ\ntempl showHelloIfTrue(b bool) {\n\t<div>\n\t\tif b {\n\t\t\t<p>Hello</p>\n\t\t}\n\t</div>\n}\n```\nThis will render `<p>Hello</p>` only if `b` is `true`."
+    },
+    {
+        "input": "what happens if a text block starts with `if`, `switch`, or `for`?",
+        "output": "If a text block starts with `if`, `switch`, or `for`, the templ parser assumes it's the start of a control flow statement. If no opening brace `{` is found, the parser will return an error. To avoid this, you can use a Go string expression or capitalize the keyword. Example:\n```templ\ntempl display(price float64, count int) {\n\t<p>{ `switch to Linux` }</p>\n\t<p>{ \"for a day\" }</p>\n}\n```"
+    },
+    {
+        "input": "how do you handle errors when using control flow statements in templ?",
+        "output": "Templ will complain if a text run starts with `if`, `switch`, or `for` but no opening brace `{` is found. For example, the following code will cause an error:\n```templ\ntempl showIfTrue(b bool) {\n\tif b \n\t  <p>Hello</p>\n\t}\n}\n```\nTo resolve this, use a Go string expression or capitalize the keyword."
+    },
+    {
+        "input": "can you include `if`, `switch`, or `for` in text without causing errors?",
+        "output": "Yes, if you need to include `if`, `switch`, or `for` in text without triggering control flow, you can use a Go string expression or capitalize the keyword. For example:\n```templ\ntempl display(price float64, count int) {\n\t<p>Switch to Linux</p>\n\t<p>{ `switch to Linux` }</p>\n\t<p>{ \"for a day\" }</p>\n}\n```"
+    },
+    {
+        "input": "why doesn't templ require special prefixes for control flow statements?",
+        "output": "Templ does not require special prefixes for `if`, `switch`, and `for` expressions because it assumes that developers are more likely to use these as control flow statements rather than starting a text run with those words. To reduce the risk of accidentally printing source code, templ will return an error if a text run starts with `if`, `switch`, or `for` but no opening `{` is found."
+    },
+    {
+        "input": "how do you use if/else statements in templ?",
+        "output": "In templ, you can use standard Go `if`/`else` statements to conditionally render components and elements. For example:\n```templ\ntempl login(isLoggedIn bool) {\n  if isLoggedIn {\n    <div>Welcome back!</div>\n  } else {\n    <input name=\"login\" type=\"button\" value=\"Log in\"/>\n  }\n}\n```\nWhen rendered with `isLoggedIn` set to `true`, the output will be:\n```html\n<div>\n Welcome back!\n</div>\n```"
+    },
+    {
+        "input": "how do you use switch statements in templ?",
+        "output": "In templ, you can use standard Go `switch` statements to conditionally render components and elements based on different cases. For example:\n```templ\ntempl userTypeDisplay(userType string) {\n\tswitch userType {\n\t\tcase \"test\":\n\t\t\t<span>{ \"Test user\" }</span>\n\t\tcase \"admin\":\n\t\t\t<span>{ \"Admin user\" }</span>\n\t\tdefault:\n\t\t\t<span>{ \"Unknown user\" }</span>\n\t}\n}\n```\nWhen rendered with `userType` set to `\"Other\"`, the output will be:\n```html\n<span>\n Unknown user\n</span>\n```"
+    },
+    {
+        "input": "how do you use for loops in templ?",
+        "output": "In templ, you can use the standard Go `for` loop to iterate over slices or arrays and render elements dynamically. For example:\n```templ\ntempl nameList(items []Item) {\n  <ul>\n  for _, item := range items {\n    <li>{ item.Name }</li>\n  }\n  </ul>\n}\n```\nWhen rendered with a slice of items, the output will be:\n```html\n<ul>\n  <li>A</li>\n  <li>B</li>\n  <li>C</li>\n</ul>\n```"
+    },
+    {
+        "input": "how do you use raw Go code in templ?",
+        "output": "In templ, you can use the `{{ ... }}` syntax to include raw Go code statements in your template. This is useful for advanced use cases, such as declaring scoped variables to reduce the need for multiple function calls. For example:\n```templ\ntempl nameList(items []Item) {\n    {{ first := items[0] }}\n    <p>\n        { first.Name }\n    </p>\n}\n```\nWhen rendered with a slice of items, the output will be:\n```html\n<p>A</p>\n```"
+    },
+    {
+        "input": "how do you compose templates in templ?",
+        "output": "In templ, templates can be composed using the `@` syntax to call other templates. For example:\n```templ\ntempl showAll() {\n\t@left()\n\t@middle()\n\t@right()\n}\ntempl left() {\n\t<div>Left</div>\n}\ntempl middle() {\n\t<div>Middle</div>\n}\ntempl right() {\n\t<div>Right</div>\n}\n```\nThe output will be:\n```html\n<div>\n Left\n</div>\n<div>\n Middle\n</div>\n<div>\n Right\n</div>\n```"
+    },
+    {
+        "input": "how do you pass children to a component in templ?",
+        "output": "Children can be passed to a component using the `{ children... }` expression. For example:\n```templ\ntempl showAll() {\n\t@wrapChildren() {\n\t\t<div>Inserted from the top</div>\n\t}\n}\ntempl wrapChildren() {\n\t<div id=\"wrapper\">\n\t\t{ children... }\n\t</div>\n}\n```\nThe output will be:\n```html\n<div id=\"wrapper\">\n <div>\n  Inserted from the top\n </div>\n</div>\n```"
+    },
+    {
+        "input": "how do you pass children to a component using Go code in templ?",
+        "output": "To pass children to a component using Go code, use the `templ.WithChildren` function. For example:\n```go\ncontents := templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {\n\t_, err := io.WriteString(w, \"<div>Inserted from Go code</div>\")\n\treturn err\n})\nctx := templ.WithChildren(context.Background(), contents)\nwrapChildren().Render(ctx, os.Stdout)\n```\nThe output will be:\n```html\n<div id=\"wrapper\">\n <div>\n  Inserted from Go code\n </div>\n</div>\n```"
+    },
+    {
+        "input": "how do you pass components as parameters in templ?",
+        "output": "Components can be passed as parameters to other components and rendered using the `@component` expression. For example:\n```templ\ntempl layout(contents templ.Component) {\n\t<div id=\"heading\">\n\t\t@heading()\n\t</div>\n\t<div id=\"contents\">\n\t\t@contents\n\t</div>\n}\ntempl paragraph(contents string) {\n\t<p>{ contents }</p>\n}\n```\nWhen rendered, the output will be:\n```html\n<div id=\"heading\">\n\t<h1>Heading</h1>\n</div>\n<div id=\"contents\">\n\t<p>Dynamic contents</p>\n</div>\n```"
+    },
+    {
+        "input": "how do you join components in templ?",
+        "output": "Components can be aggregated into a single component using `templ.Join`. For example:\n```templ\ntempl helloWorld() {\n\t@templ.Join(hello(), world())\n}\n```\nThe output will be:\n```html\n<span>hello</span><span>world</span>\n```"
+    },
+    {
+        "input": "how do you share and reuse components in templ?",
+        "output": "Since templ components are compiled into Go functions, they follow Go's rules for sharing and reusing code. Components in the same directory can access each other, and components in different directories can be accessed by importing the package containing the component. To export a component, capitalize its name. For example:\n```templ\ntempl Hello() {\n\t<div>Hello</div>\n}\n```\nTo import and use it:\n```templ\nimport \"github.com/a-h/templ/examples/counter/components\"\ntempl Home() {\n\t@components.Hello()\n}\n```"
+    },
+    {
+        "input": "how do you manage CSS styles in templ?",
+        "output": "In templ, you can manage CSS styles using the `style` attribute. You can use static values, variables, or expressions to dynamically generate styles. For example:\n```templ\ntempl button(style, text string) {\n\t<button style={ style }>{ text }</button>\n}\n```\nYou can also pass multiple values to the `style` attribute, and templ supports various types like `string`, `map[string]string`, `templ.SafeCSS`, and more."
+    },
+    {
+        "input": "how do you use variables in the style attribute in templ?",
+        "output": "To use variables in the `style` attribute, use braces `{}` to denote a Go expression. For example:\n```templ\ntempl button(style1, style2 string, text string) {\n\t<button style={ style1, style2 }>{ text }</button>\n}\n```\nThis allows you to dynamically pass and combine multiple styles."
+    },
+    {
+        "input": "what types are supported in the style attribute in templ?",
+        "output": "The `style` attribute in templ supports several types, including:\n- `string`: A string containing CSS properties.\n- `templ.SafeCSS`: A value containing CSS properties that won't be sanitized.\n- `map[string]string`: A map of CSS keys to string values.\n- `templ.KeyValue[string, string]`: A single CSS key/value pair.\n- Functions returning any of the above types.\nExample:\n```templ\ntempl Page(userType string) {\n\t<div style={ getStyle(userType) }>Styled</div>\n}\n```"
+    },
+    {
+        "input": "how do you conditionally apply styles in templ?",
+        "output": "You can conditionally apply styles using the `templ.KV` helper, which allows compact syntax for conditional styling. For example:\n```templ\ntempl TextInput(value string, hasError bool) {\n    <input\n        type=\"text\"\n        value={ value }\n        style={\n            templ.KV(\"border-color: #ff3860\", hasError),\n            templ.KV(\"background-color: #fff5f7\", hasError),\n            \"padding: 0.5em 1em;\",\n        }\n    >\n}\n```\nIf `hasError` is `true`, the styles will be applied."
+    },
+    {
+        "input": "how do you bypass CSS sanitization in templ?",
+        "output": "By default, dynamic CSS values are sanitized to prevent vulnerabilities. To bypass sanitization, mark your content as safe using `templ.SafeCSS` or `templ.SafeCSSProperty`. For example:\n```templ\nfunc calculatePositionStyles(x, y int) templ.SafeCSS {\n    return templ.SafeCSS(fmt.Sprintf(\n        \"transform: translate(%dpx, %dpx);\",\n        x*2, y*2,\n    ))\n}\ntempl DraggableElement(x, y int) {\n    <div style={ calculatePositionStyles(x, y) }>\n        Drag me\n    </div>\n}\n```\nThe output will include the unsanitized CSS."
+    },
+    {
+        "input": "what are some common use cases for CSS patterns in templ?",
+        "output": "Common use cases for CSS patterns in templ include:\n- **Maps**: Dynamic style sets requiring multiple computed values (e.g., progress indicators, theme switching).\n- **KeyValue**: Conditional style toggling (e.g., form validation, interactive states).\n- **Functions**: Complex style generation (e.g., animations, data visualizations).\n- **Direct Strings**: Simple static styles (e.g., basic formatting, utility classes)."
+    },
+    {
+        "input": "how does CSS sanitization work in templ?",
+        "output": "In templ, dynamic CSS values are automatically sanitized to protect against dangerous CSS values that might introduce vulnerabilities. For example:\n```templ\ntempl UnsafeExample() {\n    <div style={ \"background-image: url('javascript:alert(1)')\" }>\n        Dangerous content\n    </div>\n}\n```\nThe output will replace unsafe values with placeholders:\n```html\n<div style=\"background-image:zTemplUnsafeCSSPropertyValue;\">\n    Dangerous content\n</div>\n```\nSanitization can be bypassed using `templ.SafeCSS` or `templ.SafeCSSProperty` for trusted content."
+    },
+    {
+        "input": "how do you handle errors in CSS attributes in templ?",
+        "output": "Invalid CSS values in attributes are automatically sanitized and replaced with `zTemplUnsafeCSSPropertyName` or `zTemplUnsafeCSSPropertyValue`. If unsupported types are passed, the output will include `zTemplUnsupportedStyleAttributeValue:Invalid;`. For example:\n```templ\ntempl InvalidButton() {\n    <button style={ map[string]string{\"\": \"invalid-property\", \"color\": \"</style>\"} }>Click me</button>\n}\n```\nThe output will be:\n```html\n<button style=\"zTemplUnsafeCSSPropertyName:zTemplUnsafeCSSPropertyValue;color:zTemplUnsafeCSSPropertyValue;\">\n    Click me\n</button>\n```"
+    },
+    {
+        "input": "how do you dynamically toggle CSS classes in templ?",
+        "output": "You can dynamically toggle CSS classes using `templ.KV`, maps, or arrays. For example:\n```templ\ntempl button(text string, isPrimary bool) {\n\t<button class={ \"button\", templ.KV(\"is-primary\", isPrimary) }>{ text }</button>\n}\n```\nIf `isPrimary` is `false`, the output will exclude the `is-primary` class:\n```html\n<button class=\"button\">\n Click me\n</button>\n```"
+    },
+    {
+        "input": "how do you include CSS components in templ?",
+        "output": "CSS components allow you to encapsulate styles within a component library. They ensure styles are rendered only once per HTTP request and generate unique class names. For example:\n```templ\ncss primaryClassName() {\n\tbackground-color: #ffffff;\n\tcolor: { red };\n}\ntempl button(text string, isPrimary bool) {\n\t<button class={ \"button\", primaryClassName(), templ.KV(primaryClassName(), isPrimary) }>{ text }</button>\n}\n```\nThe output includes a `<style>` block with unique class names:\n```html\n<style type=\"text/css\">\n .className_f179{background-color:#ffffff;color:#ff0000;}\n</style>\n<button class=\"button className_f179\">\n Click me\n</button>\n```"
+    },
+    {
+        "input": "how do you use CSS middleware in templ?",
+        "output": "CSS middleware in templ allows you to serve a global stylesheet (`/styles/templ.css` by default) instead of including `<style>` tags in each HTTP request. This saves bandwidth by centralizing CSS. To use it, register CSS classes on application startup and add the middleware:\n```go\nc1 := className()\nhandler := NewCSSMiddleware(httpRoutes, c1)\nhttp.ListenAndServe(\":8000\", handler)\n```\nDon't forget to include the stylesheet in your HTML:\n```html\n<link rel=\"stylesheet\" href=\"/styles/templ.css\">\n```"
+    },
+    {
+        "input": "how do you pass arguments to CSS components in templ?",
+        "output": "CSS components can accept arguments to dynamically generate styles. For example:\n```templ\ncss loading(percent int) {\n\twidth: { fmt.Sprintf(\"%d%%\", percent) };\n}\ntempl index() {\n    <div class={ loading(50) }></div>\n    <div class={ loading(100) }></div>\n}\n```\nThe output includes unique class names for each argument value:\n```html\n<style type=\"text/css\">\n .loading_a3cc{width:50%;}\n</style>\n<div class=\"loading_a3cc\"></div>\n<style type=\"text/css\">\n .loading_9ccc{width:100%;}\n</style>\n<div class=\"loading_9ccc\"></div>\n```"
+    },
+    {
+        "input": "how do you include JavaScript in templ components?",
+        "output": "You can include JavaScript in templ components using standard `<script>` tags. For example:\n```templ\ntempl body() {\n  <script>\n    function handleClick(event) {\n      alert(event + ' clicked');\n    }\n  </script>\n  <button onclick=\"handleClick(this)\">Click me</button>\n}\n```\nTo ensure a `<script>` tag is rendered only once per HTTP response, use `templ.OnceHandle`."
+    },
+    {
+        "input": "how do you pass Go data to JavaScript in templ?",
+        "output": "You can pass Go data to JavaScript using `templ.JSFuncCall`, which encodes the data as JSON and passes it to a client-side function. For example:\n```templ\ntempl Component(data CustomType) {\n\t<button onclick={ templ.JSFuncCall(\"alert\", data.Message) }>Show alert</button>\n}\n```\nThe output will call the `alert` function with the JSON-encoded data:\n```html\n<button onclick=\"alert('Hello, from the JSFuncCall data')\">Show alert</button>\n```"
+    },
+    {
+        "input": "how do you handle event objects in JavaScript event handlers with templ?",
+        "output": "To pass the event object to a JavaScript function, use `templ.JSExpression`. For example:\n```templ\n<script>\n\tfunction clickHandler(event, message) {\n\t\talert(message);\n\t\tevent.preventDefault();\n\t}\n</script>\n<button onclick={ templ.JSFuncCall(\"clickHandler\", templ.JSExpression(\"event\"), \"message from Go\") }>Show event</button>\n```\nThe output will include the event object directly:\n```html\n<button onclick=\"clickHandler(event, 'message from Go')\">Show event</button>\n```"
+    },
+    {
+        "input": "how do you pass server-side data to the client in HTML attributes with templ?",
+        "output": "You can pass server-side data to the client in HTML attributes using `templ.JSONString`, which encodes the data as a JSON string. For example:\n```templ\ntempl body(data any) {\n  <button id=\"alerter\" alert-data={ templ.JSONString(data) }>Show alert</button>\n}\n```\nThe output will include the JSON-encoded data in the attribute:\n```html\n<button id=\"alerter\" alert-data=\"{&quot;msg&quot;:&quot;Hello, from the attribute data&quot;}\">Show alert</button>\n```"
+    },
+    {
+        "input": "how do you pass server-side data to the client in a script element with templ?",
+        "output": "You can pass server-side data to the client in a `<script>` element using `templ.JSONScript`. For example:\n```templ\ntempl body(data any) {\n  @templ.JSONScript(\"id\", data)\n}\n```\nThe output will include the data in a `<script>` tag:\n```html\n<script id=\"id\" type=\"application/json\">{\"msg\":\"Hello, from the script data\"}</script>\n```"
+    },
+    {
+        "input": "how do you avoid inline event handlers in templ?",
+        "output": "To avoid inline event handlers, you can use a `<script>` tag to add client-side behavior dynamically. For example:\n```templ\ntempl hello(label, name string) {\n  @helloHandle.Once() {\n    <script>\n      function hello(name) {\n        alert('Hello, ' + name + '!');\n      }\n    </script>\n  }\n  <div>\n    <input type=\"button\" value={ label } data-name={ name }/>\n    <script>\n      (() => {\n        let scriptElement = document.currentScript;\n        let parent = scriptElement.closest('div');\n        let nearestButtonWithName = parent.querySelector('input[data-name]');\n        nearestButtonWithName.addEventListener('click', function() {\n          let name = nearestButtonWithName.getAttribute('data-name');\n          hello(name);\n        })\n      })()\n    </script>\n  </div>\n}\n```"
+    },
+    {
+        "input": "how do you import JavaScript libraries in templ?",
+        "output": "You can import JavaScript libraries in templ using standard `<script>` tags with the `src` attribute pointing to the library's URL. For example:\n```templ\ntempl head() {\n\t<head>\n\t\t<script src=\"https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js\"></script>\n\t</head>\n}\n```\nOnce imported, you can use the library directly in your templ components via `<script>` tags."
+    },
+    {
+        "input": "how do you work with NPM projects and TypeScript in templ?",
+        "output": "To integrate NPM projects and TypeScript with templ, you can use tools like `esbuild` to transpile TypeScript into plain JavaScript. First, create a TypeScript project and install dependencies:\n```bash\nmkdir ts\ncd ts\nnpm init\nnpm install --save-dev typescript esbuild\n```\nThen, add a build script to bundle the TypeScript code into an output directory:\n```json\n{\n  \"scripts\": {\n    \"build\": \"esbuild --bundle --minify --outfile=../assets/js/index.js ./src/index.ts\"\n  }\n}\n```\nAfter building, include the generated JavaScript file in your HTML using a `<script>` tag."
+    },
+    {
+        "input": "how do you reduce boilerplate when adding client-side behavior in templ?",
+        "output": "You can reduce boilerplate by using utility libraries like [surreal](https://github.com/gnat/surreal). For example:\n```templ\ntempl hello(label, name string) {\n  @surrealHandle.Once() {\n    <script src=\"https://cdn.jsdelivr.net/gh/gnat/surreal@3b4572dd0938ce975225ee598a1e7381cb64ffd8/surreal.js\"></script>\n  }\n  <div>\n    <input type=\"button\" value={ label } data-name={ name }/>\n    <script>\n      me(\"-\").addEventListener('click', function() {\n        let name = this.getAttribute('data-name');\n        hello(name);\n      })\n    </script>\n  </div>\n}\n```\nThis approach simplifies event handling and reduces repetitive code."
+    },
+    {
+        "input": "how do you serve static assets like JavaScript files in templ?",
+        "output": "You can serve static assets like JavaScript files using Go's `http.FileServer`. For example:\n```go\nmux := http.NewServeMux()\nmux.Handle(\"/assets/\", http.StripPrefix(\"/assets/\", http.FileServer(http.Dir(\"assets\"))))\nhttp.ListenAndServe(\"localhost:8080\", mux)\n```\nPlace your JavaScript files in the `assets` directory, and they will be accessible via URLs like `/assets/js/index.js`."
+    },
+    {
+        "input": "how do you bundle TypeScript code for use in templ?",
+        "output": "To bundle TypeScript code for use in templ, use a tool like `esbuild`. First, create a TypeScript project and install dependencies:\n```bash\nnpm install --save-dev typescript esbuild\n```\nThen, add a build script to your `package.json` to transpile and bundle the TypeScript code:\n```json\n\"scripts\": {\n  \"build\": \"esbuild --bundle --minify --outfile=../assets/js/index.js ./src/index.ts\"\n}\n```\nRun the build script to generate the bundled JavaScript file, which can then be included in your HTML using a `<script>` tag."
+    },
+    {
+        "input": "how do you use script templates in templ?",
+        "output": "Script templates are a legacy feature in templ that allow you to pass Go data to JavaScript. For example:\n```templ\nscript graph(data []TimeValue) {\n\tconst chart = LightweightCharts.createChart(document.body, { width: 400, height: 300 });\n\tconst lineSeries = chart.addLineSeries();\n\tlineSeries.setData(data);\n}\ntempl page(data []TimeValue) {\n\t<html>\n\t\t<head>\n\t\t\t<script src=\"https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js\"></script>\n\t\t</head>\n\t\t<body onload={ graph(data) }></body>\n\t</html>\n}\n```\nThe `graph` function is called with JSON-encoded Go data when the page loads."
+    },
+    {
+        "input": "how do you render JavaScript functions directly in templ?",
+        "output": "You can render JavaScript functions directly in templ using the `@` expression. For example:\n```templ\nscript printToConsole(content string) {\n\tconsole.log(content)\n}\ntempl page(content string) {\n\t<html>\n\t\t<body>\n\t\t  @printToConsole(content)\n\t\t  @printToConsole(fmt.Sprintf(\"Again: %s\", content))\n\t\t</body>\n\t</html>\n}\n```\nThe output will include `<script>` tags that call the JavaScript function with JSON-encoded Go data:\n```html\n<script>__templ_printToConsole_5a85(\"2023-11-11 01:01:40.983381358 +0000 UTC\")</script>\n```"
+    },
+    {
+        "input": "how do you pass arbitrary JavaScript expressions to templ script templates?",
+        "output": "You can pass arbitrary JavaScript expressions to templ script templates using the `templ.JSExpression` type. A common use case is passing the `event` or `this` objects to an event handler. For example:\n```templ\nscript showButtonWasClicked(event templ.JSExpression) {\n\tconst originalButtonText = event.target.innerText;\n\tevent.target.innerText = \"I was Clicked!\";\n\tsetTimeout(() => event.target.innerText = originalButtonText, 2000);\n}\ntempl page() {\n\t<html>\n\t\t<body>\n\t\t\t<button type=\"button\" onclick={ showButtonWasClicked(templ.JSExpression(\"event\")) }>Click Me</button>\n\t\t</body>\n\t</html>\n}\n```"
+    },
+    {
+        "input": "how do you serve static assets like JavaScript files in a Go web server with templ?",
+        "output": "You can serve static assets like JavaScript files using Go's `http.FileServer`. For example:\n```go\nmux := http.NewServeMux()\nmux.Handle(\"/assets/\", http.StripPrefix(\"/assets/\", http.FileServer(http.Dir(\"assets\"))))\nh := templ.Handler(components.Page(data))\nmux.Handle(\"/\", h)\nhttp.ListenAndServe(\"localhost:8080\", mux)\n```\nPlace your JavaScript files in the `assets` directory, and they will be accessible via URLs like `/assets/js/index.js`."
+    },
+    {
+        "input": "how do you integrate TypeScript with templ?",
+        "output": "To integrate TypeScript with templ, use a bundler like `esbuild` to transpile TypeScript into JavaScript. First, create a TypeScript project and install dependencies:\n```bash\nnpm install --save-dev typescript esbuild\n```\nAdd a build script to your `package.json`:\n```json\n\"scripts\": {\n  \"build\": \"esbuild --bundle --minify --outfile=../assets/js/index.js ./src/index.ts\"\n}\n```\nAfter building, include the generated JavaScript file in your HTML using a `<script>` tag:\n```templ\ntempl head() {\n\t<head>\n\t\t<script src=\"/assets/js/index.js\"></script>\n\t</head>\n}\n```"
+    },
+    {
+        "input": "how do you add comments in templ?",
+        "output": "In templ, you can use HTML comments inside templ statements and Go comments outside of them. For example:\n```templ\ntempl template() {\n\t<!-- Single line -->\n\t<!--\n\t\tSingle or multiline.\n\t-->\n}\n```\nThese comments are rendered to the output:\n```html\n<!-- Single line -->\n<!--\n\tSingle or multiline.\n-->\n```"
+    },
+    {
+        "input": "how do you use Go comments in templ files?",
+        "output": "Outside of templ statements, you can use standard Go comments. For example:\n```templ\npackage main\n// Use standard Go comments outside templ statements.\nvar greeting = \"Hello!\"\ntempl hello(name string) {\n\t<p>{greeting} { name }</p>\n}\n```\nGo comments are not rendered in the output and are only visible in the source code."
+    },
+    {
+        "input": "are nested comments supported in templ?",
+        "output": "No, nested comments are not supported in templ. As per HTML standards, attempting to nest comments will result in invalid syntax. For example:\n```html\n<!-- Outer comment <!-- Nested comment --> -->\n```\nThis will cause issues because HTML does not support nested comments."
+    },
+    {
+        "input": "what problems does `context` solve in templ?",
+        "output": "`context` in templ solves issues like \"prop drilling\" and tight coupling. Prop drilling occurs when data is passed through multiple layers of components, even if intermediate components don't use the data. Context allows data to be accessible at any level in the component hierarchy without explicitly passing it through props. It also decouples components from specific data structures, making them more reusable."
+    },
+    {
+        "input": "how do you use Go's `context` package in templ?",
+        "output": "In templ, you can use Go's `context` package by accessing the implicit `ctx` variable within components. For example:\n```templ\ntempl themeName() {\n\t<div>{ ctx.Value(themeContextKey).(string) }</div>\n}\n```\nTo set a value in the context, use `context.WithValue` in your Go code:\n```go\nctx := context.WithValue(context.Background(), themeContextKey, \"test\")\nthemeName().Render(ctx, w)\n```\nThis allows components to access the context value without prop drilling."
+    },
+    {
+        "input": "how can you make context usage type-safe in templ?",
+        "output": "To make context usage type-safe, implement a helper function that retrieves the value from the context. For example:\n```go\nfunc GetTheme(ctx context.Context) string {\n\tif theme, ok := ctx.Value(themeContextKey).(string); ok {\n\t\treturn theme\n\t}\n\treturn \"\"\n}\n```\nThen use this function in your templ component:\n```templ\ntempl themeName() {\n\t<div>{ GetTheme(ctx) }</div>\n}\n```\nThis approach avoids direct type assertions in templates and improves code readability."
+    },
+    {
+        "input": "how do you use `context` with HTTP middleware in templ?",
+        "output": "You can use `context` with HTTP middleware to pass request-specific data to templ components. For example:\n```go\nfunc Middleware(next http.Handler) http.Handler {\n\treturn http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n\t\tctx := context.WithValue(r.Context(), contextClass, \"red\")\n\t\tnext.ServeHTTP(w, r.WithContext(ctx))\n\t})\n}\n```\nThe middleware sets a context value, which can be accessed in templ components:\n```templ\ntempl Show() {\n\t<div class={ ctx.Value(contextClass) }>Display</div>\n}\n```\nThis ensures the context value is available for the duration of the HTTP request."
+    },
+    {
+        "input": "what are the risks of using `context` in templ?",
+        "output": "Using `context` in templ can lead to runtime panics if a required context value is missing or has an unexpected type. For example, if a component relies on a context variable set by HTTP middleware, forgetting to include the middleware will cause the component to panic. To mitigate this, ensure proper error handling and use helper functions to safely retrieve context values."
+    },
+    {
+        "input": "how do you use `html/template` in a templ component?",
+        "output": "To use an existing `html/template` in a templ component, use the `templ.FromGoHTML` function. For example:\n```templ\ntempl Example() {\n\t<!DOCTYPE html>\n\t<html>\n\t\t<body>\n\t\t\t@templ.FromGoHTML(goTemplate, \"Hello, World!\")\n\t\t</body>\n\t</html>\n}\n```\nThe `goTemplate` is a pre-defined `html/template` instance. When rendered, it outputs:\n```html\n<!DOCTYPE html>\n<html>\n\t<body>\n\t\t<div>Hello, World!</div>\n\t</body>\n</html>\n```"
+    },
+    {
+        "input": "how do you use a templ component within `html/template`?",
+        "output": "To use a templ component within `html/template`, render the component into a `template.HTML` value using `templ.ToGoHTML`. For example:\n```go\nhtml, err := templ.ToGoHTML(context.Background(), greeting())\nif err != nil {\n\tt.Fatalf(\"failed to convert to html: %v\", err)\n}\nerr = example.Execute(os.Stdout, html)\n```\nThe `greeting` templ component is rendered and passed as a `template.HTML` value to the `html/template` instance. The output will be:\n```html\n<!DOCTYPE html>\n<html>\n\t<body>\n\t\t<div>Hello, World!</div>\n\t</body>\n</html>\n```"
+    },
+    {
+        "input": "what is the purpose of `templ.FromGoHTML`?",
+        "output": "`templ.FromGoHTML` allows you to integrate existing `html/template` templates into templ components. It takes a `*template.Template` and its data, renders it, and includes the result in the templ component's output. This is useful when migrating from `html/template` to templ or when combining both templating systems."
+    },
+    {
+        "input": "what is the purpose of `templ.ToGoHTML`?",
+        "output": "`templ.ToGoHTML` converts a templ component into a `template.HTML` value, which can then be used within `html/template`. This enables interoperability between templ and `html/template`, allowing you to embed templ components in existing `html/template` workflows."
+    },
+    {
+        "input": "how do you render raw HTML in templ?",
+        "output": "To render raw HTML in templ, use the `templ.Raw` function. This bypasses all HTML escaping and security mechanisms, so it should only be used with trusted HTML sources. For example:\n```templ\ntempl Example() {\n\t<!DOCTYPE html>\n\t<html>\n\t\t<body>\n\t\t\t@templ.Raw(\"<div>Hello, World!</div>\")\n\t\t</body>\n\t</html>\n}\n```\nThe output will include the raw HTML as-is:\n```html\n<!DOCTYPE html>\n<html>\n\t<body>\n\t\t<div>Hello, World!</div>\n\t</body>\n</html>\n```"
+    },
+    {
+        "input": "how do you use React components with templ?",
+        "output": "To use React components with templ, follow these steps:\n1. **Create React Components**: Write your React components using TSX or JSX.\n   ```tsx\n   export const Header = () => (<h1>React component Header</h1>);\n   export const Body = () => (<div>This is client-side content from React</div>);\n   ```\n2. **Create a Templ Page**: Use templ to define HTML elements with specific IDs where React components will be rendered.\n   ```templ\n   templ page() {\n       <html>\n           <body>\n               <div id=\"react-header\"></div>\n               <div id=\"react-content\"></div>\n               <script src=\"static/index.js\"></script>\n           </body>\n       </html>\n   }\n   ```\n3. **Render React Components**: Use JavaScript/TypeScript to render React components into the specified IDs.\n   ```typescript\n   import { createRoot } from 'react-dom/client';\n   import { Header, Body } from './components';\n   const headerRoot = document.getElementById('react-header');\n   if (!headerRoot) throw new Error('Could not find element with id react-header');\n   const headerReactRoot = createRoot(headerRoot);\n   headerReactRoot.render(Header());\n   ```\n4. **Bundle the Code**: Use a bundler like `esbuild` to create a client-side JavaScript bundle.\n   ```bash\n   esbuild --bundle index.ts --outdir=../static --minify\n   ```"
+    },
+    {
+        "input": "what is the role of templ when using React components?",
+        "output": "Templ handles server-side rendering and defines the structure of the HTML page, including placeholders (specific IDs) where React components will be rendered. React components are then used as \"islands of interactivity\" on the client side, providing dynamic functionality while templ manages the static parts of the page."
+    },
+    {
+        "input": "how do you integrate React and templ for server-side rendering?",
+        "output": "To integrate React and templ for server-side rendering:\n1. Use templ to generate the initial HTML structure with placeholders (IDs) for React components.\n2. Load a JavaScript bundle containing React components via a `<script>` tag in the templ-generated HTML.\n3. Use React's `createRoot` API to mount React components into the placeholders defined by templ.\n4. Bundle the React code using a tool like `esbuild` to make it compatible with the browser."
+    },
+    {
+        "input": "what tools can be used to bundle React components for use with templ?",
+        "output": "You can use bundling tools like `esbuild` to bundle React components for use with templ. For example, running the following command creates a minified JavaScript bundle:\n```bash\nesbuild --bundle index.ts --outdir=../static --minify\n```\nThis bundle can then be included in the templ-generated HTML using a `<script>` tag."
+    },
+    {
+        "input": "why would you use React with templ instead of relying solely on templ or React?",
+        "output": "Using React with templ allows you to leverage the strengths of both technologies. Templ excels at server-side rendering and generating static HTML, while React provides rich, interactive client-side features. By combining them, you can create a hybrid architecture where templ handles server-rendered content and React acts as \"islands of interactivity,\" reducing complexity compared to a full React-based solution."
+    },
+    {
+        "input": "how do you pass server-side data to React components when using templ?",
+        "output": "To pass server-side data to React components:\n1. **Create a React Component**: Define a React component that accepts data as props.\n   ```tsx\n   export const Hello = (name: string) => (\n     <div>Hello {name} (Client-side React, rendering server-side data)</div>\n   );\n   ```\n2. **Export a Rendering Function**: Write a JavaScript function to render the React component into an HTML element, extracting data from attributes.\n   ```typescript\n   export function renderHello(e: HTMLElement) {\n     const name = e.getAttribute('data-name') ?? \"\";\n     createRoot(e).render(Hello(name));\n   }\n   ```\n3. **Update the Templ Component**: Use templ to generate HTML elements with `data-*` attributes and include a `<script>` tag to call the rendering function.\n   ```templ\n   templ Hello(name string) {\n       <div data-name={ name }>\n           <script>\n               bundle.renderHello(document.currentScript.closest('div'));\n           </script>\n       </div>\n   }\n   ```\n4. **Bundle with `esbuild`**: Use `esbuild` with the `--global-name` flag to expose the rendering function globally.\n   ```bash\n   esbuild --bundle index.ts --outdir=../static --minify --global-name=bundle\n   ```"
+    },
+    {
+        "input": "how do you serve both templ templates and React bundles in a Go web server?",
+        "output": "To serve both templ templates and React bundles:\n1. Use `http.NewServeMux` to define routes.\n2. Serve the templ page using `templ.Handler`.\n3. Serve static files (e.g., the React bundle) using `http.FileServer`.\nExample:\n```go\nmux := http.NewServeMux()\nmux.Handle(\"/\", templ.Handler(page()))\nmux.Handle(\"/static/\", http.StripPrefix(\"/static/\", http.FileServer(http.Dir(\"static\"))))\nhttp.ListenAndServe(\"localhost:8080\", mux)\n```"
+    },
+    {
+        "input": "what is the sequence of operations when integrating React with templ?",
+        "output": "The sequence of operations is:\n1. The browser requests the page (`GET /`).\n2. The Go server renders the templ component into HTML and sends it to the browser.\n3. The browser requests the React bundle (`GET /static/index.js`).\n4. The server serves the React bundle.\n5. The browser executes the React bundle, which renders React components into placeholders defined by templ.\nThis process combines server-side rendering with client-side interactivity."
+    },
+    {
+        "input": "where can I find a complete example of integrating React with templ?",
+        "output": "A complete example of integrating React with templ can be found at https://github.com/a-h/templ/tree/main/examples/integration-react. This repository demonstrates how to combine server-side templ rendering with client-side React components, including passing server-side data to React."
+    },
+    {
+        "input": "why is the `--global-name` flag used in `esbuild` when integrating React with templ?",
+        "output": "The `--global-name` flag in `esbuild` exposes exported functions from the bundled JavaScript file under a global namespace (e.g., `bundle`). This allows templ-generated HTML to reference these functions directly in `<script>` tags, enabling seamless integration between server-rendered HTML and client-side React components."
+    },
+    {
+        "input": "how do you ensure content is rendered only once per page in templ?",
+        "output": "To ensure content is rendered only once per page, use a `*OnceHandler` created with `templ.NewOnceHandle()` and its `Once()` method. For example:\n```templ\nvar helloHandle = templ.NewOnceHandle()\ntempl hello(label, name string) {\n  @helloHandle.Once() {\n    <script>\n      function hello(name) {\n        alert('Hello, ' + name + '!');\n      }\n    </script>\n  }\n  <input type=\"button\" value={ label } data-name={ name } onclick=\"hello(this.getAttribute('data-name'))\"/>\n}\n```\nEven if the `hello` component is rendered multiple times, the `<script>` block will only appear once in the output."
+    },
+    {
+        "input": "what are common use cases for `*OnceHandler` in templ?",
+        "output": "Common use cases for `*OnceHandler` include:\n- Rendering a `<style>` tag with CSS classes required by a component.\n- Including a `<script>` tag with JavaScript required by a component.\n- Adding a `<link>` tag referencing a stylesheet.\nThis ensures that these resources are included only once, even if the component is used multiple times on the same page."
+    },
+    {
+        "input": "how do you share `*OnceHandler` components across packages in templ?",
+        "output": "To share `*OnceHandler` components across packages, export the component containing the `*OnceHandler` from a shared package. For example, create a `deps` package with a `JQuery` component:\n```templ\npackage deps\nvar jqueryHandle = templ.NewOnceHandle()\ntempl JQuery() {\n  @jqueryHandle.Once() {\n    <script src=\"https://code.jquery.com/jquery-3.6.0.min.js\"></script>\n  }\n}\n```\nThen, import and use the `JQuery` component in other packages to ensure the script is included only once:\n```templ\n@deps.JQuery()\n```"
+    },
+    {
+        "input": "why should you avoid creating a new `*OnceHandler` inside the `Once()` method?",
+        "output": "Creating a new `*OnceHandler` inside the `Once()` method (e.g., `@templ.NewOnceHandle().Once()`) results in a new handler being created each time the method is called. This defeats the purpose of ensuring content is rendered only once, as a new instance will not track previous renders, leading to duplicate content in the output."
+    },
+    {
+        "input": "how can you pass server-side data to client-side JavaScript using `*OnceHandler` in templ?",
+        "output": "You can pass server-side data to client-side JavaScript using attributes like `data-*`. For example:\n```templ\n<input type=\"button\" value=\"Click me\" data-name={ name } onclick=\"hello(this.getAttribute('data-name'))\"/>\n```\nThe `data-name` attribute passes the `name` value from Go code to JavaScript. For complex data structures, use `templ.JSONString` to encode data as a JSON string in a `data-*` attribute or `templ.JSONScript` to embed JSON in a `<script>` tag."
+    },
+    {
+        "input": "what are templ components and how are they compiled?",
+        "output": "Templ components are markup and code that are compiled into Go functions returning a `templ.Component` interface by running the `templ generate` command. For example:\n```templ\ntempl headerTemplate(name string) {\n  <header data-testid=\"headerTemplate\">\n    <h1>{ name }</h1>\n  </header>\n}\n```\nThe generated Go function looks like this:\n```go\nfunc headerTemplate(name string) templ.Component {\n  // Generated contents\n}\n```\nThe `templ.Component` interface includes a `Render` method to output the component's HTML to an `io.Writer`."
+    },
+    {
+        "input": "how do you create code-only components in templ?",
+        "output": "Code-only components implement the `templ.Component` interface directly without using `.templ` files. For example:\n```go\nfunc button(text string) templ.Component {\n\treturn templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {\n\t\t_, err := io.WriteString(w, \"<button>\" + text + \"</button>\")\n\t\treturn err\n\t})\n}\n```\nWhen rendered, it outputs:\n```html\n<button>Click me</button>\n```\nNote: You must manually escape HTML content in code-only components to avoid security risks."
+    },
+    {
+        "input": "how do you create method components in templ?",
+        "output": "Method components are templ components attached to a type as methods. For example:\n```templ\ntype Data struct {\n\tmessage string\n}\ntempl (d Data) Method() {\n\t<div>{ d.message }</div>\n}\n```\nYou can call the method on an instance of the type:\n```go\nd := Data{message: \"You can implement methods on a type.\"}\nd.Method().Render(context.Background(), os.Stdout)\n```\nAlternatively, you can initialize the struct and call the method inline:\n```templ\n@Data{\n    message: \"You can implement methods on a type.\",\n}.Method()\n```"
+    },
+    {
+        "input": "what is the `templ.Component` interface?",
+        "output": "The `templ.Component` interface represents a component that can render itself to an `io.Writer`. It has a single method:\n```go\ntype Component interface {\n\tRender(ctx context.Context, w io.Writer) error\n}\n```\nThis allows components to be rendered in a consistent way, whether they are generated from `.templ` files or implemented as code-only components."
+    },
+    {
+        "input": "how do you ensure safe HTML rendering in code-only components?",
+        "output": "In code-only components, you are responsible for escaping HTML content to prevent security vulnerabilities. Use the `templ.EscapeString` function to safely escape strings before rendering them. For example:\n```go\nfunc safeButton(text string) templ.Component {\n\tescapedText := templ.EscapeString(text)\n\treturn templ.ComponentFunc(func(ctx context.Context, w io.Writer) error {\n\t\t_, err := io.WriteString(w, \"<button>\" + escapedText + \"</button>\")\n\t\treturn err\n\t})\n}\n```"
+    },
+    {
+        "input": "how do you generate Go code from `*.templ` files?",
+        "output": "To generate Go code from `*.templ` files, use the `templ generate` command. This command recursively processes all `*.templ` files in the current directory and its subdirectories, generating corresponding Go code. For example:\n```\ntempl generate\n```\nThe output includes warnings and a summary of updates:\n```\n(!) void element <input> should not have child content [ from=12:2 to=12:7 ]\n(✓) Complete [ updates=62 duration=144.677334ms ]\n```"
+    },
+    {
+        "input": "what are some advanced options for the `templ generate` command?",
+        "output": "The `templ generate` command provides several advanced options, such as:\n- `-f <file>`: Generate code for a single file.\n- `-stdout`: Print generated code to stdout instead of writing to the filesystem (only works with `-f`).\n- `-watch`: Watch the directory for changes and regenerate code automatically.\n- `-w <number>`: Specify the number of parallel workers for code generation.\n- `-lazy`: Only generate `.go` files if the source `.templ` file is newer.\nUse `templ generate --help` to view all available options."
+    },
+    {
+        "input": "how do you watch for changes and regenerate code automatically?",
+        "output": "To watch for changes and regenerate code automatically, use the `-watch` flag with the `templ generate` command:\n```\ntempl generate -watch\n```\nThis mode continuously monitors the directory for changes to `*.templ` files and regenerates the corresponding Go code. However, note that the generated code in this mode is not optimized for production use."
+    },
+    {
+        "input": "how do you generate code for a single `*.templ` file?",
+        "output": "To generate code for a single `*.templ` file, use the `-f` flag followed by the file name. For example:\n```\ntempl generate -f header.templ\n```\nThis generates Go code only for the specified file. You can also use the `-stdout` flag to print the generated code to the console instead of writing it to the filesystem:\n```\ntempl generate -f header.templ -stdout\n```"
+    },
+    {
+        "input": "what does the `--source-map-visualisations` option do?",
+        "output": "The `--source-map-visualisations` option generates HTML files that visualize the relationship between the `*.templ` code and its corresponding Go code. This can be useful for debugging or understanding how the templ files are translated into Go code. To enable this feature, run:\n```\ntempl generate --source-map-visualisations\n```"
+    },
+    {
+        "input": "how do you perform expectation testing for templ components?",
+        "output": "Expectation testing validates that specific data appears in the output in the correct format and position. You can use the `goquery` library to parse and query the HTML output of a templ component. For example:\n```go\nfunc TestHeader(t *testing.T) {\n    r, w := io.Pipe()\n    go func() {\n        _ = headerTemplate(\"Posts\").Render(context.Background(), w)\n        _ = w.Close()\n    }()\n    doc, err := goquery.NewDocumentFromReader(r)\n    if err != nil {\n        t.Fatalf(\"failed to read template: %v\", err)\n    }\n    if doc.Find(`[data-testid=\"headerTemplate\"]`).Length() == 0 {\n        t.Error(\"expected data-testid attribute to be rendered, but it wasn't\")\n    }\n}\n```\nThis approach ensures that specific elements and attributes are present in the rendered output."
+    },
+    {
+        "input": "how do you test navigation items in a templ component?",
+        "output": "To test navigation items, use `goquery` to find all `a` elements within the `nav` element and verify their content matches expected values. For example:\n```go\nnavItems := []string{\"Home\", \"Posts\"}\ndoc.Find(\"nav a\").Each(func(i int, s *goquery.Selection) {\n    expected := navItems[i]\n    if actual := s.Text(); actual != expected {\n        t.Errorf(\"expected nav item %q, got %q\", expected, actual)\n    }\n})\n```\nThis ensures the navigation bar contains the correct links and labels."
+    },
+    {
+        "input": "how do you test HTTP handlers in templ?",
+        "output": "To test HTTP handlers, use the `httptest` package to create a test server and make requests to it. For example:\n```go\nfunc TestPostsHandler(t *testing.T) {\n    tests := []struct {\n        name           string\n        postGetter     func() ([]Post, error)\n        expectedStatus int\n        assert         func(doc *goquery.Document)\n    }{\n        {\n            name: \"database errors result in a 500 error\",\n            postGetter: func() ([]Post, error) {\n                return nil, errors.New(\"database error\")\n            },\n            expectedStatus: http.StatusInternalServerError,\n            assert: func(doc *goquery.Document) {\n                if doc.Text() != \"failed to retrieve posts\\n\" {\n                    t.Errorf(\"expected error message\")\n                }\n            },\n        },\n    }\n    for _, test := range tests {\n        w := httptest.NewRecorder()\n        r := httptest.NewRequest(http.MethodGet, \"/posts\", nil)\n        ph := NewPostsHandler()\n        ph.GetPosts = test.postGetter\n        ph.ServeHTTP(w, r)\n        doc, _ := goquery.NewDocumentFromReader(w.Result().Body)\n        test.assert(doc)\n    }\n}\n```\nThis approach tests both error handling and successful rendering of posts."
+    },
+    {
+        "input": "what is snapshot testing in templ?",
+        "output": "Snapshot testing checks that the output of a component hasn't changed since the last time a snapshot was taken. It relies on manually verifying the output initially and then comparing future outputs against the saved snapshot. For example:\n```go\nfunc Test(t *testing.T) {\n    component := render(\"sample content\")\n    diff, err := htmldiff.Diff(component, expected)\n    if err != nil {\n        t.Fatal(err)\n    }\n    if diff != \"\" {\n        t.Error(diff)\n    }\n}\n```\nThis ensures consistency in rendering and helps detect unintended changes."
+    },
+    {
+        "input": "how do you add `data-testid` attributes for testing in templ?",
+        "output": "Adding `data-testid` attributes to your templ components simplifies testing by providing unique identifiers for elements. For example:\n```templ\ntempl headerTemplate(name string) {\n    <header data-testid=\"headerTemplate\">\n        <h1>{ name }</h1>\n    </header>\n}\n```\nIn tests, you can locate this element using `doc.Find(`[data-testid=\"headerTemplate\"]`)`. This makes tests less brittle and easier to maintain."
+    },
+    {
+        "input": "what are view models in templ and how do they improve testing?",
+        "output": "View models in templ are Go structs that contain only the fields needed for rendering a template. They simplify testing by decoupling the data structure from complex backend logic, making it easier to test templates in isolation. Instead of passing raw data or complex structures directly into templates, you create a view model that closely matches the visual layout. For example:\n\n```go\ntype InviteComponentViewModel struct {\n  InviteCount  int\n  ErrorMessage string\n}\n```\nThis approach avoids calling APIs or performing complex transformations within templates, reducing the need for integration tests. The handler prepares the view model, and the template focuses on rendering:\n```templ\ntempl teamInviteComponent(model InviteComponentViewModel) {\n  if model.InviteCount > 0 {\n    <div>You have { fmt.Sprintf(\"%d\", model.InviteCount) } pending invites</div>\n  }\n  if model.ErrorMessage != \"\" {\n    <div class=\"error\">{ model.ErrorMessage }</div>\n  }\n}\n```\nThis ensures templates are easier to test and maintain."
+    },
+    {
+        "input": "how do you create a static HTTP server with templ?",
+        "output": "To create a static HTTP server with templ, use the `templ.Handler` function to wrap a templ component as an HTTP handler. For example:\n```go\nhttp.Handle(\"/\", templ.Handler(hello()))\nhttp.ListenAndServe(\":8080\", nil)\n```\nThis serves the `hello` component as the response for requests to the root path (`/`)."
+    },
+    {
+        "input": "how do you display fixed data in a templ component?",
+        "output": "To display fixed data, pass it as a parameter to the templ component when creating the HTTP handler. For example:\n```go\nhttp.Handle(\"/\", templ.Handler(timeComponent(time.Now())))\n```\nThis renders the server's startup time in the `timeComponent`. Note that this approach displays static data and does not update dynamically."
+    },
+    {
+        "input": "how do you display dynamic data in a templ component?",
+        "output": "To display dynamic data, implement an HTTP handler that calls the templ component's `Render` method with updated data. For example:\n```go\nfunc (nh NowHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {\n    timeComponent(nh.Now()).Render(r.Context(), w)\n}\n```\nHere, the `NowHandler` uses a `time.Now` function to pass the current time to the `timeComponent`, ensuring the output is always up-to-date."
+    },
+    {
+        "input": "what are some best practices for creating reusable templ components?",
+        "output": "Good templ components should be idempotent and pure functions, meaning they rely only on their parameters and produce the same output for the same inputs. Avoid embedding logic like `time.Now()` directly in components; instead, pass dynamic data as parameters. This ensures reusability and testability. For example:\n```templ\ntempl timeComponent(d time.Time) {\n    <div>{ d.String() }</div>\n}\n```"
+    },
+    {
+        "input": "how do you handle HTTP status codes with templ components?",
+        "output": "You can use the `templ.WithStatus` function to specify an HTTP status code when creating an HTTP handler. For example:\n```go\nhttp.Handle(\"/404\", templ.Handler(notFoundComponent(), templ.WithStatus(http.StatusNotFound)))\n```\nThis sets the HTTP status code to `404` for the `/404` route while rendering the `notFoundComponent`."
+    },
+    {
+        "input": "what is Datastar and how does it work with templ?",
+        "output": "Datastar is a hypermedia framework similar to HTMX, designed for real-time applications. It enables fine-grained reactive updates using Server-Sent Events (SSE) and integrates seamlessly with templ for server-side rendering. Datastar allows you to define HTML elements that dynamically update based on signals, reducing the need for complex JavaScript. For example, you can use `data-on-click` attributes to trigger server requests and `data-text` attributes to bind dynamic content to the UI."
+    },
+    {
+        "input": "how do you include the Datastar library in a templ project?",
+        "output": "To include the Datastar library in a templ project, use the helper functions `@datastar.ScriptCDNLatest()` or `@datastar.ScriptCDNVersion(version string)` in your HTML. For example:\n```templ\n<script src=\"@datastar.ScriptCDNLatest()\"></script>\n```\nThis simplifies the inclusion of the Datastar client-side library, enabling its features like reactive updates and SSE."
+    },
+    {
+        "input": "how do you implement a counter example with Datastar and templ?",
+        "output": "To implement a counter example:\n1. **Frontend**: Define HTML with buttons and reactive bindings.\n   ```templ\ntempl templCounterExampleButtons() {\n    <button data-on-click=\"@post('/increment/global')\">Increment Global</button>\n    <button data-on-click=\"@post('/increment/user')\">Increment User</button>\n}\n```\n2. **Backend**: Set up routes to handle updates and serve initial state.\n   ```go\nrouter.Post(\"/increment/global\", func(w http.ResponseWriter, r *http.Request) {\n    globalCounter.Add(1)\n    datastar.NewSSE(w, r).MarshalAndMergeSignals(gabs.Wrap(map[string]uint32{\"global\": globalCounter.Load()}))\n})\n```\nThis approach uses Datastar's SSE and signal merging to update the UI dynamically."
+    },
+    {
+        "input": "how does Datastar handle per-user session state?",
+        "output": "Datastar handles per-user session state using HTTP cookies. When a request is received, the server reads the session ID from the cookie and retrieves the user's state. For example:\n```go\nsess, err := sessionStore.Get(r, \"sessionKey\")\nval := sess.Values[\"countKey\"]\n```\nThe session state can then be updated and saved back to the session store. This ensures that each user's state is isolated and persists across requests."
+    },
+    {
+        "input": "what is signal-only patching in Datastar?",
+        "output": "Signal-only patching in Datastar allows you to send only the changed signals to the client instead of full HTML fragments. This is more efficient for updates where the structure of the page doesn't change. For example:\n```go\nupdate := gabs.New()\nupdate.Set(newValue, \"signalName\")\ndatastar.NewSSE(w, r).MarshalAndMergeSignals(update)\n```\nThis approach merges updates into the existing signal store on the client side, dynamically updating the UI without re-rendering the entire component."
+    },
+    {
+        "input": "how do you generate Go code from templ files?",
+        "output": "To generate Go code from templ files, use the `templ generate` command. By default, it processes all `.templ` files in the current directory and subdirectories. For example:\n```\ntempl generate\n```\nYou can also generate code for a single file using the `-f` flag:\n```\ntempl generate -f header.templ\n```"
+    },
+    {
+        "input": "what are some advanced options for the `templ generate` command?",
+        "output": "The `templ generate` command provides several advanced options, such as:\n- `-path <path>`: Specify a directory to process.\n- `-watch`: Watch for changes and regenerate code automatically.\n- `-include-version`: Include the templ version in the generated code (default is `true`).\n- `-lazy`: Only regenerate `.go` files if the source `.templ` file is newer.\n- `-pprof`: Enable profiling by specifying a port.\nUse `templ generate --help` to view all available options."
+    },
+    {
+        "input": "how do you format templ files?",
+        "output": "To format templ files, use the `templ fmt` command. You can format all files in the current directory and subdirectories:\n```\ntempl fmt .\n```\nOr format input from stdin and output to stdout:\n```\ntempl fmt\n```\nIn CI pipelines, you can use the `-fail` flag to ensure invalidly formatted templates fail the build:\n```\ntempl fmt -fail .\n```"
+    },
+    {
+        "input": "what is the purpose of the `templ lsp` command?",
+        "output": "The `templ lsp` command provides a Language Server Protocol (LSP) implementation for IDE integrations. It is not intended for direct use by users but supports tools like VSCode extensions and Neovim. It offers additional options for logging, debugging, and profiling, such as:\n- `-goplsLog`: Log `gopls` output.\n- `-http`: Enable an HTTP debug server.\n- `-pprof`: Enable a pprof web server for profiling."
+    },
+    {
+        "input": "how do you check the version of the templ CLI?",
+        "output": "To check the version of the templ CLI, use the `templ version` command:\n```\ntempl version\n```\nThis will print the installed version of templ."
+    },
+    {
+        "input": "how do you set up templ in Visual Studio Code?",
+        "output": "To set up templ in Visual Studio Code, install the templ extension from the marketplace (https://marketplace.visualstudio.com/items?itemName=a-h.templ). Ensure that the `templ` CLI is installed and available in your system path. You can enable formatting on save by adding the following to your `settings.json`:\n```json\n{\n    \"editor.formatOnSave\": true,\n    \"[templ]\": {\n        \"editor.defaultFormatter\": \"a-h.templ\"\n    }\n}\n```"
+    },
+    {
+        "input": "how do you enable Tailwind CSS autocompletion for `.templ` files in VS Code?",
+        "output": "To enable Tailwind CSS autocompletion for `.templ` files in VS Code, add the following to your `settings.json`:\n```json\n{\n  \"tailwindCSS.includeLanguages\": {\n    \"templ\": \"html\"\n  }\n}\n```\nEnsure that a `tailwind.config.js` file exists in your project root. If not, create one using `npx tailwindcss init`."
+    },
+    {
+        "input": "how do you configure Neovim to use the templ Language Server?",
+        "output": "To configure Neovim for templ, ensure the `templ` CLI is in your system path. Use `nvim-lspconfig` to set up the templ LSP:\n```lua\nlocal lspconfig = require(\"lspconfig\")\nlspconfig.templ.setup({\n    on_attach = on_attach,\n    capabilities = capabilities,\n})\n```\nAdd the `.templ` filetype to Neovim with:\n```lua\nvim.filetype.add({ extension = { templ = \"templ\" } })\n```"
+    },
+    {
+        "input": "how do you format `.templ` files on save in Neovim?",
+        "output": "To format `.templ` files on save in Neovim, use an autocmd with the templ LSP or the `templ fmt` command. For example:\n```lua\nvim.api.nvim_create_autocmd({ \"BufWritePre\" }, {\n    pattern = { \"*.templ\" },\n    callback = function()\n        vim.lsp.buf.format()\n    end\n})\n```\nAlternatively, use a custom function to run `templ fmt`:\n```lua\nlocal templ_format = function()\n    local bufnr = vim.api.nvim_get_current_buf()\n    local filename = vim.api.nvim_buf_get_name(bufnr)\n    local cmd = \"templ fmt \" .. vim.fn.shellescape(filename)\n    vim.fn.jobstart(cmd, {\n        on_exit = function()\n            if vim.api.nvim_get_current_buf() == bufnr then\n                vim.cmd('e!')\n            end\n        end,\n    })\nend\n```"
+    },
+    {
+        "input": "how do you integrate other LSPs like Tailwind CSS or HTMX with `.templ` files in Neovim?",
+        "output": "To integrate other LSPs with `.templ` files in Neovim, configure their `filetypes` to include `templ`. For example:\n- **Tailwind CSS**:\n```lua\nlspconfig.tailwindcss.setup({\n    filetypes = { \"templ\", \"html\" },\n    settings = {\n        tailwindCSS = {\n            includeLanguages = {\n                templ = \"html\",\n            },\n        },\n    },\n})\n```\n- **HTMX**:\n```lua\nlspconfig.htmx.setup({\n    filetypes = { \"templ\", \"html\" },\n})\n```\nEnsure your `tailwind.config.js` includes `.templ` files in its `content` array."
+    },
+    {
+        "input": "how do you troubleshoot templ LSP issues in Neovim?",
+        "output": "To troubleshoot templ LSP issues in Neovim:\n1. **Check Installation**: Ensure `templ`, `go`, and `gopls` are installed and in your system path.\n   ```bash\n   which go gopls templ\n   ```\n2. **Enable Logging**: Configure the LSP to log output for debugging.\n   ```lua\n   configs.templ = {\n       default_config = {\n           cmd = { \"templ\", \"lsp\", \"-log=/path/to/templ.log\" },\n           filetypes = { \"templ\" },\n       },\n   }\n   ```\n3. **Verify Syntax Highlighting**: Run `:TSBufEnable highlight` or add an autocmd to enable it automatically.\n4. **Minimal Config**: Use a minimal Neovim config to isolate issues.\n5. **Inspect Logs**: Check the logs for errors or unexpected behavior."
+    },
+    {
+        "input": "how do you set up templ with Helix editor?",
+        "output": "Helix has built-in support for templ starting from version 23.05. To use templ in Helix:\n1. Ensure you have Helix version 23.05 or later.\n2. Templ support is included out of the box, so no additional configuration is required.\n3. If you encounter issues, ensure the `templ` binary is installed and available in your system path."
+    },
+    {
+        "input": "how do you configure templ in Emacs?",
+        "output": "To configure templ in Emacs:\n1. Install `templ-ts-mode` via MELPA.\n2. Ensure the tree-sitter parser for Templ is installed. If not, `templ-ts-mode` will prompt you to download and build it using `treesit-install-language-grammar`.\n3. Add the following to your Emacs config to enable `templ-ts-mode` for `.templ` files:\n   ```elisp\n   (add-to-list 'auto-mode-alist '(\"\\.templ\\'\" . templ-ts-mode))\n   ```"
+    },
+    {
+        "input": "what steps should you take if the templ LSP doesn't start in VS Code?",
+        "output": "If the templ LSP doesn't start in VS Code:\n1. **Verify Installation**: Ensure `templ` is installed and accessible in your system path.\n   ```bash\n   which templ\n   ```\n2. **Check Permissions**: On macOS, ensure the binary is executable (`chmod +x /path/to/templ`) and allowed to run via System Preferences > Security & Privacy.\n3. **Enable Logging**: Add logging options to VS Code settings:\n   ```json\n   \"templ.log\": \"/path/to/templ.log\",\n   \"templ.goplsLog\": \"/path/to/gopls.log\"\n   ```\n4. **Minimal Reproduction**: Create a minimal project to isolate the issue.\n5. **Submit Logs**: Include logs when reporting issues."
+    },
+    {
+        "input": "how do you format `.templ` files automatically in Vim?",
+        "output": "To format `.templ` files automatically in Vim, add the following to your `.vimrc`:\n```vim\nset autoread\nautocmd BufWritePost *.templ silent! execute \"!PATH=\\\"$PATH:$(go env GOPATH)/bin\\\" templ fmt <afile> >/dev/null 2>&1\" | redraw!\n```\nThis ensures that `templ fmt` is run on save, formatting the file automatically."
+    },
+    {
+        "input": "how do you enable live reload for a Go web application using templ?",
+        "output": "To enable live reload for a Go web application using templ, run the following command:\n```\ntempl generate --watch --proxy=\"http://localhost:8080\" --cmd=\"go run .\"\n```\nThis command:\n1. Watches for changes in `*.templ` files and regenerates Go code.\n2. Restarts the Go app when changes are detected.\n3. Starts a proxy server (default port `7331`) that injects a live reload script into the HTML response.\n4. Automatically reloads the browser when changes are made.\nEnsure your app listens on the specified port (e.g., `8080`) and serves HTML with a `<body>` tag for script injection."
+    },
+    {
+        "input": "what is the purpose of the `--proxy` argument in `templ generate`?",
+        "output": "The `--proxy` argument in `templ generate` starts a HTTP proxy server that forwards requests to your Go web application. It injects client-side JavaScript into the HTML response to trigger automatic browser reloads when the app restarts. For example:\n```\ntempl generate --watch --proxy=\"http://localhost:8080\" --cmd=\"go run .\"\n```\nThe proxy listens on port `7331` by default and proxies requests to the app running on port `8080`. This eliminates the need to manually refresh the browser during development."
+    },
+    {
+        "input": "how does the live reload process work in templ?",
+        "output": "The live reload process in templ works as follows:\n1. The browser sends an HTTP request to the templ proxy.\n2. The proxy forwards the request to the Go app and receives the HTML response.\n3. The proxy injects a live reload script into the HTML before sending it back to the browser.\n4. The browser establishes a Server-Sent Events (SSE) connection to the proxy to listen for reload notifications.\n5. When `*.templ` or `*.go` files change, `templ generate` regenerates code, restarts the app, and notifies the proxy.\n6. The proxy sends a reload event to the browser, which refreshes the page automatically."
+    },
+    {
+        "input": "how can you use `air` for live reloading with templ?",
+        "output": "To use `air` for live reloading with templ, configure a `.air.toml` file to monitor file changes and restart the app. Example configuration:\n```toml\n[build]\nbin = \"./tmp/main\"\ncmd = \"templ generate && go build -o ./tmp/main .\"\ndelay = 1000\nexclude_regex = [\".*_templ.go\"]\n[proxy]\nenabled = true\nproxy_port = 8383\napp_port = 8282\n```\nRun `air` in your project directory. It will watch for changes, regenerate templ files, rebuild the app, and reload the browser via the proxy."
+    },
+    {
+        "input": "what tools can be used as alternatives to `templ generate --watch` for live reloading?",
+        "output": "Alternatives to `templ generate --watch` for live reloading include:\n1. **wgo**: A tool to watch files and execute commands. Example:\n   ```bash\n   wgo -file=.go -file=.templ -xfile=_templ.go templ generate :: go run main.go\n   ```\n2. **air**: A live reload tool with a configuration file (`.air.toml`) to manage builds and proxy settings.\nBoth tools can monitor file changes, regenerate templ files, restart the app, and support live browser reloads."
+    },
+    {
+        "input": "how does templ prevent injection attacks in HTML?",
+        "output": "templ prevents injection attacks by escaping user-provided data and restricting potentially dangerous constructs. For example:\n- `<script>` and `<style>` tags do not allow variables to prevent vulnerabilities.\n- `on*` attributes (e.g., `onClick`) only accept `templ.ComponentScript` to safely handle JavaScript.\n- Style attributes cannot be expressions, only constants, to avoid escaping vulnerabilities.\n- Class names are sanitized by default, replacing unsafe values with `--templ-css-class-safe-name`.\n- `href` attributes must use `templ.SafeURL` or `templ.URL` to sanitize URLs and remove potential JavaScript attacks."
+    },
+    {
+        "input": "how are `on*` attributes handled in templ to prevent vulnerabilities?",
+        "output": "In templ, `on*` attributes (e.g., `onClick`) accept a `templ.ComponentScript` instead of raw strings. This ensures that any JavaScript executed is properly escaped and safe. For example:\n```html\nscript onClickHandler(msg string) {\n  alert(msg);\n}\ntempl Example(msg string) {\n  <div onClick={ onClickHandler(msg) }></div>\n}\n```\nThis approach prevents unescaped user data from being injected into the attribute."
+    },
+    {
+        "input": "how does templ handle CSS sanitization?",
+        "output": "templ sanitizes CSS to prevent injection attacks:\n- Constant CSS property values within `css` blocks are not modified.\n- Expression-based CSS property values are passed through `templ.SanitizeCSS`, which replaces potentially unsafe values with placeholders.\nFor example:\n```css\ncss className() {\n  color: { red }; // Sanitized using templ.SanitizeCSS\n}\n```\nThis ensures that dynamic styles do not introduce vulnerabilities."
+    },
+    {
+        "input": "what happens if an unsafe class name is used in templ?",
+        "output": "If an unsafe class name is used, templ sanitizes it by replacing it with `--templ-css-class-safe-name`. For example:\n```html\ntempl Example() {\n  <div class={ \"unsafe</style>-will-sanitized\" }></div>\n}\n```\nThe rendered output will be:\n```html\n<div class=\"--templ-css-class-safe-name\"></div>\n```\nYou can bypass sanitization using `templ.SafeClass`, but the result is still subject to escaping."
+    },
+    {
+        "input": "how does templ handle `href` attributes to prevent JavaScript injection?",
+        "output": "templ ensures `href` attributes are safe by requiring them to be wrapped in `templ.URL` or `templ.SafeURL`:\n- `templ.URL` sanitizes the URL to remove potential JavaScript attacks.\n- `templ.SafeURL` bypasses sanitization but still escapes the value.\nFor example:\n```html\ntempl Example() {\n  <a href={ templ.URL(\"javascript:alert('xss')\") }></a> <!-- Sanitized -->\n  <a href={ templ.SafeURL(\"http://example.com\") }></a> <!-- Not sanitized -->\n}\n```\nThis prevents malicious JavaScript URLs from being injected."
+    },
+    {
+        "input": "how do you use the `urlbuilder` package in templ to construct safe URLs?",
+        "output": "The `urlbuilder` package in templ allows you to construct safe URLs by chaining methods for protocol, host, path, and query parameters. The final URL is wrapped in `templ.SafeURL` to ensure it is sanitized and safe for use in `href` attributes. Here's an example:\n\n```templ\ntempl component(o Order) {\n  <a\n    href={ urlbuilder.New(\"https\", \"example.com\").\n      Path(\"orders\").\n      Path(o.ID).\n      Path(\"line-items\").\n      Query(\"page\", strconv.Itoa(1)).\n      Query(\"limit\", strconv.Itoa(10)).\n      Build() }\n  >\n    { strings.ToUpper(o.Name) }\n  </a>\n}\n```\nThis constructs a URL like `https://example.com/orders/{o.ID}/line-items?page=1&limit=10` while ensuring it is safe from injection attacks."
+    }
+]

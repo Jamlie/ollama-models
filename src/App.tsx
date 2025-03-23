@@ -57,7 +57,10 @@ export default function App() {
     }
 
     async function handleSendMessage() {
-        if (!input.trim()) return;
+        if (!input.trim()) {
+            return;
+        }
+
         if (!selectedModel) {
             alert("Please select a model first!");
             return;
@@ -65,10 +68,8 @@ export default function App() {
 
         setInputDisabled(true);
 
-        // Add the user's message to the messages state
         setMessages((prev) => [...prev, { role: "user", content: input }]);
 
-        // Clear the input after adding the user's message
         const userInput = input;
         setInput("");
 
@@ -154,8 +155,6 @@ export default function App() {
         });
         setMessages([]);
     }
-
-    useEffect(() => console.log(messages), [messages]);
 
     return (
         <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">

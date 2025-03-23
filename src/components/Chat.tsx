@@ -1,4 +1,5 @@
 import ReactMarkdown, { Components } from "react-markdown";
+import React, { memo } from "react";
 import { Message } from "../types/types";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
@@ -11,6 +12,47 @@ type Props = {
     messages: Message[];
     isDarkMode: boolean;
 };
+
+export function Chat({ chatContainerRef, messages, isDarkMode }: Props) {
+    return (
+        <div
+            ref={chatContainerRef}
+            className="flex-1 overflow-y-auto px-4 py-6 space-y-4"
+        >
+            {messages.map((message, index) => (
+                <MessageBubble
+                    key={index}
+                    message={message}
+                    isDarkMode={isDarkMode}
+                />
+            ))}
+        </div>
+    );
+}
+
+const MessageBubble = memo(
+    ({ message, isDarkMode }: { message: Message; isDarkMode: boolean }) => {
+        return (
+            <div
+                className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
+            >
+                <div
+                    className={`max-w-2xl px-4 py-2 rounded-lg ${
+                        message.role === "user"
+                            ? "bg-blue-500 text-white"
+                            : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                    } whitespace-pre-wrap transition-colors duration-200`}
+                >
+                    <ReactMarkdown
+                        components={renderOptionsProducer(isDarkMode)}
+                    >
+                        {message.content}
+                    </ReactMarkdown>
+                </div>
+            </div>
+        );
+    },
+);
 
 function renderOptionsProducer(isDarkMode: boolean): Components {
     return {
@@ -32,38 +74,4 @@ function renderOptionsProducer(isDarkMode: boolean): Components {
             );
         },
     };
-}
-
-export function Chat({ chatContainerRef, messages, isDarkMode }: Props) {
-    return (
-        <div
-            ref={chatContainerRef}
-            className="flex-1 overflow-y-auto px-4 py-6 space-y-4"
-        >
-            {messages.map((message, index) => (
-                <div
-                    key={index}
-                    className={`flex ${
-                        message.role === "user"
-                            ? "justify-end"
-                            : "justify-start"
-                    }`}
-                >
-                    <div
-                        className={`max-w-2xl px-4 py-2 rounded-lg ${
-                            message.role === "user"
-                                ? "bg-blue-500 text-white"
-                                : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                        } whitespace-pre-wrap transition-colors duration-200`}
-                    >
-                        <ReactMarkdown
-                            components={renderOptionsProducer(isDarkMode)}
-                        >
-                            {message.content}
-                        </ReactMarkdown>
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
 }
